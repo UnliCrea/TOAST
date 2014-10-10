@@ -2,3 +2,231 @@ TOAST
 =====
 
 Unit Testing for CodeIgniter
+
+Licensed under Creative Commons Attribution 3.0 (cc)
+
+Created by Jens Roland, 2010 (mail@jensroland.com)
+Credits to t'mo & redguy from the CodeIgniter Forums
+Currently maintained by UnliCrea
+
+
+CONTENTS:
+
+Installation
+Instructions
+Requirements
+Known Bugs
+Usage
+Feature List
+Reserved Names
+
+
+1) INSTALLATION:
+
+The entire testing suite consists of just two controllers, three views, and an example class.
+
+FILES:
+
+Toast.php: The base class handling all the magic
+Toast_all.php: Optional - runs all your tests at once
+header.php: View - header HTML
+results.php: View - results wrapped in <li></li> elements
+footer.php: View - footer HTML
+example_tests.php: Optional - example test class (view source for tips)
+user_test.php: Optional - example test class showing how you can unit test a class. P.S: It will not actually run since the class doesn't exist. It's no more than a code guideline.
+
+
+2) INSTRUCTIONS:
+
+Download the repo as ZIP, extract the TOAST folder
+
+Create two new folders:
+
+/app/controllers/test
+/app/views/test
+
+Move the two controller files and the example test class to /app/controllers/test, and the three view files to /app/views/test
+
+Add your test classes to app/controllers/test, and enjoy testing!
+
+
+3) REQUIREMENTS:
+
+CodeIgniter 2.2 framework or later (It will probably work with 2>, but 2.2 is the tested one)
+PHP 5 (although I'm sure it could be rewritten to run under PHP 4 fairly easily)
+CURL running on your web server (only required to run Toast_all, not necessary for regular use of Toast)
+
+
+4) KNOWN BUGS:
+
+None. Up till now. If you've ever found one, shoot an e-mail at toast@unlicrea.com
+
+
+5) USAGE:
+
+Simply subclass the Toast file and write your tests as functions with the prefix 'test_':
+
+require_once(APPPATH . '/controllers/test/Toast.php');
+
+class My_test_class extends Toast
+{
+	function My_test_class()
+	{
+		parent::Toast(__FILE__); // Remember this
+	}
+
+	function test_some_action()
+	{
+		// Test code goes here
+		$my_var = 2 + 2;
+		$this->_assert_equals($my_var, 4);
+	}
+
+	function test_some_other_action()
+	{
+		// Test code goes here
+		$my_var = true;
+		$this->_assert_false($my_var);
+	}
+}
+
+Make sure to require the tested class's file if you're going to test classes rather than very simple statements such as the example shown above. Here's an example of that:
+
+require_once(APPPATH . '/controllers/test/Toast.php');
+require_once(APPPATH . '/controllers/user.php'); //Require the tested class's file
+
+class user_test extends Toast
+{
+	private $UserController;
+
+	function __construct()
+	{
+		parent::__construct(__FILE__);
+		$this->UserController = new User(true);	//Instantiate class
+	}
+
+	function _pre() {
+
+		//Prepare unit test user database entry
+
+		$data = array (
+			'user_id' => '987654321',
+			'username' => 'unit_test_username',
+			'password' => 'unit_test_password'
+			'name' => 'Test',
+			'address' => 'Test Address',
+			'city' => 'Test',
+			'state' => 'TE',
+			'zip_code' => '23456',
+		);
+
+		echo $this->db->insert('users', $data);
+	}
+
+	function test_login()
+	{
+		$this->_assert_true($this->UserController->user_model->login('unit_test_user_pre', 'unit_test_password'));
+	}
+
+	function _post() {
+
+		//Remove unit test office from database
+		$this->db->delete('users', array('user_id' => '987654321')); 
+	}
+}
+		
+Place your test classes INSIDE the /test/ folder (Toast_all can't find them otherwise).
+
+To run all the tests in a test class, simply point your browser to the class name:
+http://www.example.com/test/my_test_class
+
+To run an individual test, point your browser to the test function, WITHOUT the 'test_' prefix:
+http://www.example.com/test/my_test_class/some_action
+
+And to run all the tests classes in the /test/ folder at once, point your browser to the Toast_all controller:
+http://www.example.com/test/toast_all
+
+That's all! If you need more flexibility, check the feature list below, but there's really not much more to it. All the dirty work is handled behind the scenes.
+
+
+6) FEATURE LIST:
+
+MULTIPLE ASSERT FUNCTIONS
+
+You can use multiple asserts within the same function; if any one of them fails, the test fails. The assert functions available are (remember to call them using $this->):
+
+_assert_true()
+_assert_false()
+_assert_equals()
+_assert_not_equals()
+_assert_empty()
+_assert_not_empty()
+
+Plus the strict (===) versions:
+
+_assert_true_strict()
+_assert_false_strict()
+_assert_equals_strict()
+_assert_not_equals_strict()
+
+After evaluating the input, each assert function returns the result of its evaluation, in case you want to use it for branching or conditionals inside the test function. Though, if you don't need that level of fanciness, you can just run the asserts you need and let Toast handle the rest.
+
+
+CLEANUP FUNCTIONS
+
+Also available are the following two optional cleanup functions. If defined in a test class, they are automatically called when the individual tests are run:
+
+_pre(): Called before each test
+_post(): Called after each test
+
+Simply override these functions in your test classes if you need to do some housekeeping before and/or after each tests (like adding/removing test data in the database, performing logins, re-instantiating classes, clearing memory, etc.)
+
+
+DEBUG MESSAGES
+
+If you need to echo a debug message while you're unit testing, simply use the message variable:
+
+$this->message = 'if this test case fails, blame it on my_var: ' . $my_var; 
+(Of course you're using a decent debugger so you never actually need to echo debug data like that.. but let's pretend you weren't)
+
+Any value you assign to the message variable is automatically embedded in the test result page next to the test in which it was assigned.
+
+
+FAILING NICELY
+
+In some cases, it is useful to force a test to fail. Instead of using the classic but slightly cryptic _assert_true(FALSE) method, you can just call the _fail function:
+$this->_fail();
+
+You can even include an error message which will be embedded in the test result page next to the test:
+$this->_fail('Deprecated code should not be called');
+
+Note that the error message will override the $this->message variable.
+
+
+BENCHMARKING
+
+Toast uses CodeIgniter's built-in benchmarking class to calculate how long it takes for the tests to run. This is all handled automatically by CI and displayed in footer.php.
+
+Why would you need benchmarking in a unit testing suite? Well, one of the big advantages of unit testing is that it enables you to do massive refactoring of your base classes without worrying about hidden side effects. And I find that whenever I've completed a round of refactoring of my central classes, I really want to know how it's affected my site's performance. The benchmarking numbers come in handy for just that.
+
+Of course, they are no substitute for proper profiling of your functions and controllers, but if your test coverage is good, they can help you catch most major performance screwups.
+
+
+7) RESERVED NAMES:
+
+Because of the way Toast parses test functions, the following function names are reserved and can not be used/overridden in the test classes:
+
+index
+show_results
+test_index
+test_show_results
+test__* (double underscores)
+_get_test_methods
+_remap
+_run
+_run_all
+_show
+_show_all
+_fail
+
+You may override the '_assert_*' functions all you want, but that shouldn't be necessary.
