@@ -2,7 +2,7 @@
 
 require_once(APPPATH . '/controllers/test/Toast.php');
 
-class example_tests extends Toast
+class Example_tests extends Toast
 {
 	function __construct()
 	{

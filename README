@@ -23,7 +23,7 @@ Reserved Names
 
 1) INSTALLATION:
 
-The entire testing suite consists of just two controllers, three views, and an example class.
+The entire testing suite consists of just two controllers, three views, and two example classes.
 
 FILES:
 
@@ -32,8 +32,8 @@ Toast_all.php: Optional - runs all your tests at once
 header.php: View - header HTML
 results.php: View - results wrapped in <li></li> elements
 footer.php: View - footer HTML
-example_tests.php: Optional - example test class (view source for tips)
-user_test.php: Optional - example test class showing how you can unit test a class. P.S: It will not actually run since the class doesn't exist. It's no more than a code guideline.
+Example_tests.php: Optional - example test class (view source for tips)
+User_test.php: Optional - example test class showing how you can unit test a class. P.S: It will not actually run since the class doesn't exist. It's no more than a code guideline.
 
 
 2) INSTRUCTIONS:
@@ -45,7 +45,7 @@ Create two new folders:
 /app/controllers/test
 /app/views/test
 
-Move the two controller files and the example test class to /app/controllers/test, and the three view files to /app/views/test
+Move the two controller files and the two example test classes to /app/controllers/test, and the three view files to /app/views/test
 
 Add your test classes to app/controllers/test, and enjoy testing!
 
