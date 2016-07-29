@@ -69,7 +69,7 @@ class Toast_all extends CI_Controller
 		$output .= $this->load->view('test/footer', NULL, TRUE);
 		
 		// Send to display
-		echo $output;
+		$this->output->set_output($output); // No echo to be able to use compression
 	}
 
 	/**
@@ -104,13 +104,19 @@ class Toast_all extends CI_Controller
 	function _curl_get($urls)
 	{
 		$html_str = '';
-		foreach ($urls as $url)
-		{
-			$curl_handle=curl_init();
-			curl_setopt($curl_handle, CURLOPT_URL, $url);
-			curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-			$html_str .= curl_exec($curl_handle);
-			curl_close($curl_handle);
+		foreach ($urls as $theUrl) {
+			$ch = curl_init();
+			if (! $ch ) log_message('error', " curl_init FAILED !");
+			if ( ! curl_setopt($ch, CURLOPT_HEADER, 0)) log_message('error', " curl_setopt CURLOPT_HEADER FAILED !");;
+			if ( ! curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'])) log_message('error', " curl_setopt CURLOPT_USERAGENT !");
+			if ( ! curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1)) log_message('error', " curl_setopt CURLOPT_FOLLOWLOCATION");
+			if ( ! curl_setopt($ch, CURLOPT_RETURNTRANSFER, true) ) log_message('error', " curl_setopt CURLOPT_RETURNTRANSFER FAILED !");
+			if ( ! curl_setopt($ch, CURLOPT_URL, $theUrl) ) log_message('error', " curl_setopt CURLOPT_URL='"+$theUrl +"' FAILED !");
+			$resCall = curl_exec($ch);
+			if (! $resCall) log_message('error', "ERREUR Call URL {$theUrl} !");
+			if ( empty($resCall)) log_message('error', "curl exec EMPTY w/ {$theUrl} !");
+			$html_str .= $resCall;
+			curl_close($ch);
 		}
 		return $html_str;
 	}

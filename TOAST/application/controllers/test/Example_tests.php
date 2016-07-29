@@ -2,7 +2,7 @@
 
 require_once(APPPATH . '/controllers/test/Toast.php');
 
-class example_tests extends Toast
+class Example_tests extends Toast
 {
 	function __construct()
 	{
@@ -63,5 +63,5 @@ class example_tests extends Toast
 
 }
 
-// End of file example_test.php */
-// Location: ./system/application/controllers/test/example_test.php */
+// End of file Example_tests.php */
+// Location: ./system/application/controllers/test/Example_tests.php */

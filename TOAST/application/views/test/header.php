@@ -1,7 +1,9 @@
+<!DOCTYPE html>
 <html>
 <head>
-<title>Unit test results</title>
-<style type="text/css">
+	<meta charset="utf-8">
+	<title>Unit test results</title>
+	<style type="text/css">
 * { font-family: Arial, sans-serif; font-size: 9pt }
 #results { width: 100% }
 .err, .pas { color: white; font-weight: bold; margin: 2px 0; padding: 5px; vertical-align: top; }
@@ -11,7 +13,7 @@
 h1 { font-size: 12pt }
 a:link, a:visited { text-decoration: none; color: white }
 a:active, a:hover { text-decoration: none; color: black; background-color: yellow }
-</style>
+	</style>
 </head>
 <body>
 
