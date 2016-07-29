@@ -10,9 +10,8 @@ class User_test extends Toast
 	function __construct()
 	{
 		parent::__construct(__FILE__);
-		$this->UserController = new User(true);	//Instantiate class
+//		$this->UserController = new User(true);	//Instantiate class
 	}
-/*
 	function _pre() {
 
 		//Prepare unit test user database entry
@@ -28,20 +27,19 @@ class User_test extends Toast
 			'zip_code' => '23456',
 		);
 
-		echo $this->db->insert('users', $data);
+//		echo $this->db->insert('users', $data);
 	}
-*/
 	function test_login()
 	{
 //		$this->_assert_true($this->UserController->user_model->login('unit_test_user_pre', 'unit_test_password'));
 		$this->_assert_true(true);
 	}
-/*
 	function _post() {
+
 		//Remove unit test office from database
-		$this->db->delete('users', array('user_id' => '987654321')); 
+//		$this->db->delete('users', array('user_id' => '987654321')); 
+
 	}
-*/
 }
 
 ?>
